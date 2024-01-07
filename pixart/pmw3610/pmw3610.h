@@ -1,7 +1,7 @@
 #pragma once
 
 #include <zephyr/drivers/sensor.h>
-#include "../src/pixart.h"
+#include "../pixart.h"
 
 #ifdef __cplusplus
 extern "C" {
