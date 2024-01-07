@@ -1,5 +1,5 @@
 build:
   cmake: .
-  kconfig: pixart/pmw3610/Kconfig
+  kconfig: pixart/pmw3360/Kconfig
   settings:
     dts_root: .
