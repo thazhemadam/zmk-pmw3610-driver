@@ -112,7 +112,7 @@ extern const size_t pmw3360_firmware_length;
 extern const uint8_t pmw3360_firmware_data[];
 
 /* sensor initialization steps definition */
-// init is done in non-blocking manner (i.e., async), a delayable work is defined for this job
+// init is done in non-bpmw3360_async_initlocking manner (i.e., async), a delayable work is defined for this job
 // see pmw3360_init and pmw3360_async_init)
 
 enum async_init_step {
@@ -685,7 +685,7 @@ static int pmw3360_async_init_configure(const struct device *dev) {
     return err;
 }
 
-static void pmw3360_async_init(struct k_work *work) {
+static void pmw3360_async_init(struct k_work_delayable *work) {
     struct pixart_data *data = CONTAINER_OF(work, struct pixart_data, init_work);
     const struct device *dev = data->dev;
 
