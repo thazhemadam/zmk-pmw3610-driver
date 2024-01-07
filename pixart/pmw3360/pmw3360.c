@@ -11,7 +11,7 @@
 #include <zephyr/input/input.h>
 #include "pmw3360.h"
 
-#include <logging/log.h>
+#include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(pmw3360, CONFIG_PMW3360_LOG_LEVEL);
 
 /* Timings defined by spec (in us) */
