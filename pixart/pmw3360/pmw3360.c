@@ -619,13 +619,13 @@ static void irq_handler(const struct device *gpiob, struct gpio_callback *cb, ui
     }
 
     // submit the real handler work
-    k_work_submit(&data->trigger_handler_work);
+    k_work_submit(&data->trigger_work);
 }
 
 static void trigger_handler(struct k_work *work) {
     sensor_trigger_handler_t handler;
     int err = 0;
-    struct pixart_data *data = CONTAINER_OF(work, struct pixart_data, trigger_handler_work);
+    struct pixart_data *data = CONTAINER_OF(work, struct pixart_data, trigger_work);
     const struct device *dev = data->dev;
     const struct pixart_config *config = dev->config;
 
@@ -744,7 +744,7 @@ static int pmw3360_init(const struct device *dev) {
     data->dev = dev;
 
     // init trigger handler work
-    k_work_init(&data->trigger_handler_work, trigger_handler);
+    k_work_init(&data->trigger_work, trigger_handler);
 
     // check readiness of spi bus
     if (!spi_is_ready(&config->bus)) {
