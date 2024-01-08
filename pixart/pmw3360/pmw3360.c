@@ -736,7 +736,6 @@ static int pmw3360_init_irq(const struct device *dev) {
 }
 
 static int pmw3360_init(const struct device *dev) {
-    spinach is no
     struct pixart_data *data = dev->data;
     const struct pixart_config *config = dev->config;
     int err;
@@ -899,70 +898,63 @@ static int pmw3360_trigger_set(const struct device *dev, const struct sensor_tri
     return err;
 }
 
-static int pmw3360_attr_set(const struct device *dev, enum sensor_channel chan,
-                            enum sensor_attribute attr, const struct sensor_value *val) {
-    struct pixart_data *data = dev->data;
-    int err;
-
-    if (unlikely(chan != SENSOR_CHAN_ALL)) {
-        return -ENOTSUP;
-    }
-
-    if (unlikely(!data->ready)) {
-        LOG_DBG("Device is not initialized yet");
-        return -EBUSY;
-    }
-
-    switch ((uint32_t)attr) {
-    case PMW3360_ATTR_CPI:
-        err = set_cpi(dev, PMW3360_SVALUE_TO_CPI(*val));
-        break;
-
-    case PMW3360_ATTR_REST_ENABLE:
-        err = set_rest_modes(dev, PMW3360_REG_CONFIG2, PMW3360_SVALUE_TO_BOOL(*val));
-        break;
-
-    case PMW3360_ATTR_RUN_DOWNSHIFT_TIME:
-        err = set_downshift_time(dev, PMW3360_REG_RUN_DOWNSHIFT, PMW3360_SVALUE_TO_TIME(*val));
-        break;
-
-    case PMW3360_ATTR_REST1_DOWNSHIFT_TIME:
-        err = set_downshift_time(dev, PMW3360_REG_REST1_DOWNSHIFT, PMW3360_SVALUE_TO_TIME(*val));
-        break;
-
-    case PMW3360_ATTR_REST2_DOWNSHIFT_TIME:
-        err = set_downshift_time(dev, PMW3360_REG_REST2_DOWNSHIFT, PMW3360_SVALUE_TO_TIME(*val));
-        break;
-
-    case PMW3360_ATTR_REST1_SAMPLE_TIME:
-        err = set_sample_time(dev, PMW3360_REG_REST1_RATE_LOWER, PMW3360_REG_REST1_RATE_UPPER,
-                              PMW3360_SVALUE_TO_TIME(*val));
-        break;
-
-    case PMW3360_ATTR_REST2_SAMPLE_TIME:
-        err = set_sample_time(dev, PMW3360_REG_REST2_RATE_LOWER, PMW3360_REG_REST2_RATE_UPPER,
-                              PMW3360_SVALUE_TO_TIME(*val));
-        break;
-
-    case PMW3360_ATTR_REST3_SAMPLE_TIME:
-        err = set_sample_time(dev, PMW3360_REG_REST3_RATE_LOWER, PMW3360_REG_REST3_RATE_UPPER,
-                              PMW3360_SVALUE_TO_TIME(*val));
-        break;
-
-    default:
-        LOG_ERR("Unknown attribute");
-        return -ENOTSUP;
-    }
-
-    return err;
-}
-
-static const struct sensor_driver_api pmw3360_driver_api = {
-    .sample_fetch = pmw3360_sample_fetch,
-    .channel_get = pmw3360_channel_get,
-    .trigger_set = pmw3360_trigger_set,
-    .attr_set = pmw3360_attr_set,
-};
+//static int pmw3360_attr_set(const struct device *dev, enum sensor_channel chan,
+//                            enum sensor_attribute attr, const struct sensor_value *val) {
+//    struct pixart_data *data = dev->data;
+//    int err;
+//
+//    if (unlikely(chan != SENSOR_CHAN_ALL)) {
+//        return -ENOTSUP;
+//    }
+//
+//    if (unlikely(!data->ready)) {
+//        LOG_DBG("Device is not initialized yet");
+//        return -EBUSY;
+//    }
+//
+//    switch ((uint32_t)attr) {
+//    case PMW3360_ATTR_CPI:
+//        err = set_cpi(dev, PMW3360_SVALUE_TO_CPI(*val));
+//        break;
+//
+//    case PMW3360_ATTR_REST_ENABLE:
+//        err = set_rest_modes(dev, PMW3360_REG_CONFIG2, PMW3360_SVALUE_TO_BOOL(*val));
+//        break;
+//
+//    case PMW3360_ATTR_RUN_DOWNSHIFT_TIME:
+//        err = set_downshift_time(dev, PMW3360_REG_RUN_DOWNSHIFT, PMW3360_SVALUE_TO_TIME(*val));
+//        break;
+//
+//    case PMW3360_ATTR_REST1_DOWNSHIFT_TIME:
+//        err = set_downshift_time(dev, PMW3360_REG_REST1_DOWNSHIFT, PMW3360_SVALUE_TO_TIME(*val));
+//        break;
+//
+//    case PMW3360_ATTR_REST2_DOWNSHIFT_TIME:
+//        err = set_downshift_time(dev, PMW3360_REG_REST2_DOWNSHIFT, PMW3360_SVALUE_TO_TIME(*val));
+//        break;
+//
+//    case PMW3360_ATTR_REST1_SAMPLE_TIME:
+//        err = set_sample_time(dev, PMW3360_REG_REST1_RATE_LOWER, PMW3360_REG_REST1_RATE_UPPER,
+//                              PMW3360_SVALUE_TO_TIME(*val));
+//        break;
+//
+//    case PMW3360_ATTR_REST2_SAMPLE_TIME:
+//        err = set_sample_time(dev, PMW3360_REG_REST2_RATE_LOWER, PMW3360_REG_REST2_RATE_UPPER,
+//                              PMW3360_SVALUE_TO_TIME(*val));
+//        break;
+//
+//    case PMW3360_ATTR_REST3_SAMPLE_TIME:
+//        err = set_sample_time(dev, PMW3360_REG_REST3_RATE_LOWER, PMW3360_REG_REST3_RATE_UPPER,
+//                              PMW3360_SVALUE_TO_TIME(*val));
+//        break;
+//
+//    default:
+//        LOG_ERR("Unknown attribute");
+//        return -ENOTSUP;
+//    }
+//
+//    return err;
+//}
 
 #define PMW3360_DEFINE(n)                                                                          \
     static struct pixart_data data##n;                                                             \
