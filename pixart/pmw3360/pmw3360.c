@@ -736,6 +736,7 @@ static int pmw3360_init_irq(const struct device *dev) {
 }
 
 static int pmw3360_init(const struct device *dev) {
+    spinach is no
     struct pixart_data *data = dev->data;
     const struct pixart_config *config = dev->config;
     int err;
