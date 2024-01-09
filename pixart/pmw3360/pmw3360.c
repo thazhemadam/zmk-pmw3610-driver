@@ -969,7 +969,7 @@ static int pmw3360_trigger_set(const struct device *dev, const struct sensor_tri
 #define PMW3360_DEFINE(n)                                                                          \
     static struct pixart_data data##n;                                                             \
     static int32_t scroll_layers##n[] = DT_PROP(DT_DRV_INST(n), scroll_layers);                    \
-    static int32_t snipe_layers##n[] = DT_PROP(DT_DRV_INST(n), snipe_layers);                                                 \
+    static int32_t snipe_layers##n[] = DT_PROP(DT_DRV_INST(n), snipe_layers);                      \
     static const struct pixart_config config##n = {                                                \
         .irq_gpio = GPIO_DT_SPEC_INST_GET(n, irq_gpios),                                           \
         .bus =                                                                                     \
@@ -987,8 +987,8 @@ static int pmw3360_trigger_set(const struct device *dev, const struct sensor_tri
         .scroll_layers = scroll_layers##n,                                                         \
         .scroll_layers_len = DT_PROP_LEN(DT_DRV_INST(n), scroll_layers),                           \
         .snipe_layers = snipe_layers##n,                                                           \
-        .snipe_layers_len = DT_PROP_LEN(DT_DRV_INST(n), snipe_layers),
-    };
+        .snipe_layers_len = DT_PROP_LEN(DT_DRV_INST(n), snipe_layers),                             \
+    };                                                                                             \
                                                                                                    \
     DEVICE_DT_INST_DEFINE(n, pmw3360_init, NULL, &data##n, &config##n, POST_KERNEL,                \
                           CONFIG_SENSOR_INIT_PRIORITY, NULL);
