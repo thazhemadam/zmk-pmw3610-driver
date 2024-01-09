@@ -77,6 +77,7 @@ static int spi_cs_ctrl(const struct device *dev, bool enable) {
         k_busy_wait(T_NCS_SCLK);
     }
 
+    LOG_INF("finished spi_cs_ctrl");
     return err;
 }
 
@@ -169,6 +170,8 @@ static int reg_write(const struct device *dev, uint8_t reg, uint8_t val) {
 }
 
 static int motion_burst_read(const struct device *dev, uint8_t *buf, size_t burst_size) {
+
+    LOG_INF("In burst read");
     int err;
     struct pixart_data *data = dev->data;
     const struct pixart_config *config = dev->config;
@@ -229,6 +232,7 @@ static int motion_burst_read(const struct device *dev, uint8_t *buf, size_t burs
 }
 
 static int burst_write(const struct device *dev, uint8_t reg, const uint8_t *buf, size_t size) {
+    LOG_INF("In burst write");
     int err;
     struct pixart_data *data = dev->data;
     const struct pixart_config *config = dev->config;
@@ -513,7 +517,7 @@ static int pmw3360_async_init_fw_load_verify(const struct device *dev) {
     if (err) {
         LOG_ERR("Cannot enable REST modes");
     }
-
+    LOG_INF("Finished firmware load verify");
     return err;
 }
 
@@ -523,6 +527,7 @@ static void irq_handler(const struct device *gpiob, struct gpio_callback *cb, ui
     const struct device *dev = data->dev;
     const struct pixart_config *config = dev->config;
 
+    LOG_INF("In irq handler");
     // disable the interrupt line first
     err = gpio_pin_interrupt_configure_dt(&config->irq_gpio, GPIO_INT_DISABLE);
     if (unlikely(err)) {
@@ -540,6 +545,8 @@ static void trigger_handler(struct k_work *work) {
     struct pixart_data *data = CONTAINER_OF(work, struct pixart_data, trigger_handler_work);
     const struct device *dev = data->dev;
     const struct pixart_config *config = dev->config;
+
+    LOG_INF("In trigger handler");
 
     // 1. the first lock period is used to procoss the trigger
     // if data_ready_handler is non-NULL, otherwise do nothing
@@ -707,6 +714,7 @@ static int pmw3360_init(const struct device *dev) {
 }
 
 static int pmw3360_sample_fetch(const struct device *dev, enum sensor_channel chan) {
+    LOG_INF("In sample fetch");
     struct pixart_data *data = dev->data;
     uint8_t buf[PMW3360_BURST_SIZE];
 
@@ -747,6 +755,7 @@ static int pmw3360_sample_fetch(const struct device *dev, enum sensor_channel ch
 
 static int pmw3360_channel_get(const struct device *dev, enum sensor_channel chan,
                                struct sensor_value *val) {
+    LOG_INF("In channel get");
     struct pixart_data *data = dev->data;
 
     if (unlikely(!data->ready)) {
@@ -780,6 +789,7 @@ static int pmw3360_channel_get(const struct device *dev, enum sensor_channel cha
 //    This feature is useful to pass the resuming of the interrupt to application
 static int pmw3360_trigger_set(const struct device *dev, const struct sensor_trigger *trig,
                                sensor_trigger_handler_t handler) {
+    LOG_INF("In trigger set");
     struct pixart_data *data = dev->data;
     const struct pixart_config *config = dev->config;
     int err;
