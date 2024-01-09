@@ -658,11 +658,13 @@ static void trigger_handler(struct k_work *work) {
 
 static int pmw3360_async_init_power_up(const struct device *dev) {
     /* Reset sensor */
+    LOG_INF("async_init_power_up");
 
     return reg_write(dev, PMW3360_REG_POWER_UP_RESET, PMW3360_POWERUP_CMD_RESET);
 }
 
 static int pmw3360_async_init_configure(const struct device *dev) {
+    LOG_INF("pmw3360_async_init_configure");
     int err;
 
     err = set_cpi(dev, CONFIG_PMW3360_CPI);
@@ -686,14 +688,15 @@ static int pmw3360_async_init_configure(const struct device *dev) {
 }
 
 static void pmw3360_async_init(struct k_work_delayable *work) {
+    LOG_INF("pmw3360_async_init");
     struct pixart_data *data = CONTAINER_OF(work, struct pixart_data, init_work);
     const struct device *dev = data->dev;
 
-    LOG_DBG("PMW3360 async init step %d", data->async_init_step);
+    LOG_INF("async init step %d", data->async_init_step);
 
     data->err = async_init_fn[data->async_init_step](dev);
     if (data->err) {
-        LOG_ERR("PMW3360 initialization failed");
+        LOG_ERR("initialization failed");
     } else {
         data->async_init_step++;
 
@@ -707,6 +710,8 @@ static void pmw3360_async_init(struct k_work_delayable *work) {
 }
 
 static int pmw3360_init_irq(const struct device *dev) {
+     LOG_INF("Configure irq...");
+
     int err;
     struct pixart_data *data = dev->data;
     const struct pixart_config *config = dev->config;
@@ -732,10 +737,14 @@ static int pmw3360_init_irq(const struct device *dev) {
         LOG_ERR("Cannot add IRQ GPIO callback");
     }
 
+    LOG_INF("Configure irq done");
+
     return err;
 }
 
 static int pmw3360_init(const struct device *dev) {
+    LOG_INF("Start initializing...");
+
     struct pixart_data *data = dev->data;
     const struct pixart_config *config = dev->config;
     int err;
