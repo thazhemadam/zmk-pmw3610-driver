@@ -55,6 +55,10 @@ extern "C" {
     struct gpio_dt_spec irq_gpio;
     struct spi_dt_spec bus;
     struct gpio_dt_spec cs_gpio;
+    size_t scroll_layers_len;
+    int32_t *scroll_layers;
+    size_t snipe_layers_len;
+    int32_t *snipe_layers;
   };
 
 /** @brief Sensor specific attributes of PIXART. */
