@@ -985,6 +985,6 @@ static int pmw3360_trigger_set(const struct device *dev, const struct sensor_tri
     };                                                                                             \
                                                                                                    \
     DEVICE_DT_INST_DEFINE(n, pmw3360_init, NULL, &data##n, &config##n, POST_KERNEL,                \
-                          CONFIG_SENSOR_INIT_PRIORITY, &pmw3360_driver_api);
+                          CONFIG_SENSOR_INIT_PRIORITY, NULL);
 
 DT_INST_FOREACH_STATUS_OKAY(PMW3360_DEFINE)
