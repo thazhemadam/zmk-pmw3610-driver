@@ -687,7 +687,7 @@ static int pmw3360_async_init_configure(const struct device *dev) {
     return err;
 }
 
-static void pmw3360_async_init(struct k_work_delayable *work) {
+static void pmw3360_async_init(struct k_work_handler_t *work) {
     LOG_INF("pmw3360_async_init");
     struct pixart_data *data = CONTAINER_OF(work, struct pixart_data, init_work);
     const struct device *dev = data->dev;
@@ -756,10 +756,10 @@ static int pmw3360_init(const struct device *dev) {
     k_work_init(&data->trigger_handler_work, trigger_handler);
 
     // check readiness of spi bus
-    if (!spi_is_ready(&config->bus)) {
-        LOG_ERR("SPI device not ready");
-        return -ENODEV;
-    }
+//    if (!device_is_ready(&config->cs_gpio.port)) {
+//        LOG_ERR("SPI CS device not ready");
+//        return -ENODEV;
+//    }
 
     // check readiness of cs gpio pin and init it to inactive
     if (!device_is_ready(config->cs_gpio.port)) {
@@ -987,7 +987,7 @@ static int pmw3360_trigger_set(const struct device *dev, const struct sensor_tri
         .scroll_layers_len = DT_PROP_LEN(DT_DRV_INST(n), scroll_layers),                           \
         .snipe_layers = snipe_layers##n,                                                           \
         .snipe_layers_len = DT_PROP_LEN(DT_DRV_INST(n), snipe_layers),
-    };                                                                                             \
+    };
                                                                                                    \
     DEVICE_DT_INST_DEFINE(n, pmw3360_init, NULL, &data##n, &config##n, POST_KERNEL,                \
                           CONFIG_SENSOR_INIT_PRIORITY, NULL);
