@@ -30,7 +30,7 @@ extern "C" {
     sensor_trigger_handler_t     data_ready_handler; 
     const struct sensor_trigger *trigger;
     // the work structure holding the trigger handler job
-    struct k_work                trigger_handler_work;
+    struct k_work                trigger_work;
 
     // the work structure for delayable init steps
     struct k_work_delayable      init_work;

@@ -13,7 +13,7 @@
 #include <zephyr/kernel.h>
 #include <zephyr/sys/byteorder.h>
 #include <zephyr/input/input.h>
-#include "pmw3360.h"
+#include "../pmw3360.h"
 
 #include <zephyr/logging/log.h>
 LOG_MODULE_REGISTER(pmw3360, CONFIG_PMW3360_LOG_LEVEL);
@@ -537,13 +537,42 @@ static void irq_handler(const struct device *gpiob, struct gpio_callback *cb, ui
     }
 
     // submit the real handler work
-    k_work_submit(&data->trigger_handler_work);
+    k_work_submit(&data->trigger_work);
+}
+
+static void set_interrupt(const struct device *dev, const bool en) {
+    const struct pixart_config *config = dev->config;
+    int ret = gpio_pin_interrupt_configure_dt(&config->irq_gpio,
+                                              en ? GPIO_INT_LEVEL_ACTIVE : GPIO_INT_DISABLE);
+    if (ret < 0) {
+        LOG_ERR("can't set interrupt");
+    }
+}
+
+static void pmw3360_gpio_callback(const struct device *gpiob, struct gpio_callback *cb,
+                                  uint32_t pins) {
+    struct pixart_data *data = CONTAINER_OF(cb, struct pixart_data, irq_gpio_cb);
+    const struct device *dev = data->dev;
+
+    set_interrupt(dev, false);
+
+    // submit the real handler work
+    k_work_submit(&data->trigger_work);
+}
+
+static void pmw3360_work_callback(struct k_work *work) {
+    LOG_INF("In pwm3360_work_callback");
+    struct pixart_data *data = CONTAINER_OF(work, struct pixart_data, trigger_work);
+    const struct device *dev = data->dev;
+
+    pmw3360_report_data(dev);
+    set_interrupt(dev, true);
 }
 
 static void trigger_handler(struct k_work *work) {
     sensor_trigger_handler_t handler;
     int err = 0;
-    struct pixart_data *data = CONTAINER_OF(work, struct pixart_data, trigger_handler_work);
+    struct pixart_data *data = CONTAINER_OF(work, struct pixart_data, trigger_work);
     const struct device *dev = data->dev;
     const struct pixart_config *config = dev->config;
 
@@ -640,6 +669,7 @@ static int pmw3360_init_irq(const struct device *dev) {
     // check readiness of irq gpio pin
     if (!device_is_ready(config->irq_gpio.port)) {
         LOG_ERR("IRQ GPIO device not ready");
+        LOG_ERR("IRQ GPIO device not ready");
         return -ENODEV;
     }
 
@@ -674,7 +704,7 @@ static int pmw3360_init(const struct device *dev) {
     data->dev = dev;
 
     // init trigger handler work
-    k_work_init(&data->trigger_handler_work, trigger_handler);
+    k_work_init(&data->trigger_work, trigger_handler);
 
     // check readiness of spi bus
 //    if (!device_is_ready(&config->cs_gpio.port)) {
