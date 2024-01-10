@@ -551,18 +551,18 @@ static void set_interrupt(const struct device *dev, const bool en) {
 }
 
 static enum pixart_input_mode get_input_mode_for_current_layer(const struct device *dev) {
-    const struct pixart_config *config = dev->config;
-    uint8_t curr_layer = zmk_keymap_highest_layer_active();
-    for (size_t i = 0; i < config->scroll_layers_len; i++) {
-        if (curr_layer == config->scroll_layers[i]) {
-            return SCROLL;
-        }
-    }
-    for (size_t i = 0; i < config->snipe_layers_len; i++) {
-        if (curr_layer == config->snipe_layers[i]) {
-            return SNIPE;
-        }
-    }
+//    const struct pixart_config *config = dev->config;
+//    uint8_t curr_layer = zmk_keymap_highest_layer_active();
+//    for (size_t i = 0; i < config->scroll_layers_len; i++) {
+//        if (curr_layer == config->scroll_layers[i]) {
+//            return SCROLL;
+//        }
+//    }
+//    for (size_t i = 0; i < config->snipe_layers_len; i++) {
+//        if (curr_layer == config->snipe_layers[i]) {
+//            return SNIPE;
+//        }
+//    }
     return MOVE;
 }
 
@@ -948,33 +948,33 @@ static int pmw3360_sample_fetch(const struct device *dev, enum sensor_channel ch
     return err;
 }
 
-static int pmw3360_channel_get(const struct device *dev, enum sensor_channel chan,
-                               struct sensor_value *val) {
-    LOG_INF("In channel get");
-    struct pixart_data *data = dev->data;
-
-    if (unlikely(!data->ready)) {
-        LOG_DBG("Device is not initialized yet");
-        return -EBUSY;
-    }
-
-    switch (chan) {
-    case SENSOR_CHAN_POS_DX:
-        val->val1 = data->x;
-        val->val2 = 0;
-        break;
-
-    case SENSOR_CHAN_POS_DY:
-        val->val1 = data->y;
-        val->val2 = 0;
-        break;
-
-    default:
-        return -ENOTSUP;
-    }
-
-    return 0;
-}
+//static int pmw3360_channel_get(const struct device *dev, enum sensor_channel chan,
+//                               struct sensor_value *val) {
+//    LOG_INF("In channel get");
+//    struct pixart_data *data = dev->data;
+//
+//    if (unlikely(!data->ready)) {
+//        LOG_DBG("Device is not initialized yet");
+//        return -EBUSY;
+//    }
+//
+//    switch (chan) {
+//    case SENSOR_CHAN_POS_DX:
+//        val->val1 = data->x;
+//        val->val2 = 0;
+//        break;
+//
+//    case SENSOR_CHAN_POS_DY:
+//        val->val1 = data->y;
+//        val->val2 = 0;
+//        break;
+//
+//    default:
+//        return -ENOTSUP;
+//    }
+//
+//    return 0;
+//}
 
 /* Setup the callback for actual trigger handling */
 // handler could be NULL, in which case the effect is disabling the interrupt line
