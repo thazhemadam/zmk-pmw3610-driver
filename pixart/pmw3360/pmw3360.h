@@ -13,7 +13,7 @@
  * @brief Header file for the pmw3360 driver.
  */
 
-#include "pixart.h"
+#include "../pixart.h"
 
 #ifdef __cplusplus
 extern "C" {
