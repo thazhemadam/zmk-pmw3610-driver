@@ -549,6 +549,30 @@ static void set_interrupt(const struct device *dev, const bool en) {
     }
 }
 
+static enum pixart_input_mode get_input_mode_for_current_layer(const struct device *dev) {
+    const struct pixart_config *config = dev->config;
+    uint8_t curr_layer = zmk_keymap_highest_layer_active();
+    for (size_t i = 0; i < config->scroll_layers_len; i++) {
+        if (curr_layer == config->scroll_layers[i]) {
+            return SCROLL;
+        }
+    }
+    for (size_t i = 0; i < config->snipe_layers_len; i++) {
+        if (curr_layer == config->snipe_layers[i]) {
+            return SNIPE;
+        }
+    }
+    return MOVE;
+}
+
+static int set_cpi_if_needed(const struct device *dev, uint32_t cpi) {
+    struct pixart_data *data = dev->data;
+    if (cpi != data->curr_cpi) {
+        return set_cpi(dev, cpi);
+    }
+    return 0;
+}
+
 static int pmw3610_report_data(const struct device *dev) {
     struct pixart_data *data = dev->data;
     uint8_t buf[PMW3360_BURST_SIZE];
@@ -564,7 +588,7 @@ static int pmw3610_report_data(const struct device *dev) {
     switch (input_mode) {
     case MOVE:
         set_cpi_if_needed(dev, CONFIG_PMW3360_CPI);
-        dividor = CONFIG_PMW360_CPI_DIVIDOR;
+        dividor = CONFIG_PMW3360_CPI_DIVIDOR;
         break;
     case SCROLL:
         set_cpi_if_needed(dev, CONFIG_PMW3360_CPI);
