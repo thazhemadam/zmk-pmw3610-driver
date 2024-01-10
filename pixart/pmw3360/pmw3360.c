@@ -908,45 +908,45 @@ static int pmw3360_init(const struct device *dev) {
     return err;
 }
 
-static int pmw3360_sample_fetch(const struct device *dev, enum sensor_channel chan) {
-    LOG_INF("In sample fetch");
-    struct pixart_data *data = dev->data;
-    uint8_t buf[PMW3360_BURST_SIZE];
-
-    if (unlikely(chan != SENSOR_CHAN_ALL)) {
-        return -ENOTSUP;
-    }
-
-    if (unlikely(!data->ready)) {
-        LOG_DBG("Device is not initialized yet");
-        return -EBUSY;
-    }
-
-    int err = motion_burst_read(dev, buf, sizeof(buf));
-
-    if (!err) {
-        int16_t x = ((int16_t)sys_get_le16(&buf[PMW3360_DX_POS])) / CONFIG_PMW3360_CPI_DIVIDOR;
-        int16_t y = ((int16_t)sys_get_le16(&buf[PMW3360_DY_POS])) / CONFIG_PMW3360_CPI_DIVIDOR;
-        /* int16_t x = sys_get_le16(&buf[PMW3360_DX_POS]); */
-        /* int16_t y = sys_get_le16(&buf[PMW3360_DY_POS]); */
-
-        if (IS_ENABLED(CONFIG_PMW3360_ORIENTATION_0)) {
-            data->x = -x;
-            data->y = y;
-        } else if (IS_ENABLED(CONFIG_PMW3360_ORIENTATION_90)) {
-            data->x = y;
-            data->y = -x;
-        } else if (IS_ENABLED(CONFIG_PMW3360_ORIENTATION_180)) {
-            data->x = x;
-            data->y = -y;
-        } else if (IS_ENABLED(CONFIG_PMW3360_ORIENTATION_270)) {
-            data->x = -y;
-            data->y = x;
-        }
-    }
-
-    return err;
-}
+//static int pmw3360_sample_fetch(const struct device *dev, enum sensor_channel chan) {
+//    LOG_INF("In sample fetch");
+//    struct pixart_data *data = dev->data;
+//    uint8_t buf[PMW3360_BURST_SIZE];
+//
+//    if (unlikely(chan != SENSOR_CHAN_ALL)) {
+//        return -ENOTSUP;
+//    }
+//
+//    if (unlikely(!data->ready)) {
+//        LOG_DBG("Device is not initialized yet");
+//        return -EBUSY;
+//    }
+//
+//    int err = motion_burst_read(dev, buf, sizeof(buf));
+//
+//    if (!err) {
+//        int16_t x = ((int16_t)sys_get_le16(&buf[PMW3360_DX_POS])) / CONFIG_PMW3360_CPI_DIVIDOR;
+//        int16_t y = ((int16_t)sys_get_le16(&buf[PMW3360_DY_POS])) / CONFIG_PMW3360_CPI_DIVIDOR;
+//        /* int16_t x = sys_get_le16(&buf[PMW3360_DX_POS]); */
+//        /* int16_t y = sys_get_le16(&buf[PMW3360_DY_POS]); */
+//
+//        if (IS_ENABLED(CONFIG_PMW3360_ORIENTATION_0)) {
+//            data->x = -x;
+//            data->y = y;
+//        } else if (IS_ENABLED(CONFIG_PMW3360_ORIENTATION_90)) {
+//            data->x = y;
+//            data->y = -x;
+//        } else if (IS_ENABLED(CONFIG_PMW3360_ORIENTATION_180)) {
+//            data->x = x;
+//            data->y = -y;
+//        } else if (IS_ENABLED(CONFIG_PMW3360_ORIENTATION_270)) {
+//            data->x = -y;
+//            data->y = x;
+//        }
+//    }
+//
+//    return err;
+//}
 
 //static int pmw3360_channel_get(const struct device *dev, enum sensor_channel chan,
 //                               struct sensor_value *val) {
