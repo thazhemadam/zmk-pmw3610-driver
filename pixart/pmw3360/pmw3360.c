@@ -13,6 +13,7 @@
 #include <zephyr/kernel.h>
 #include <zephyr/sys/byteorder.h>
 #include <zephyr/input/input.h>
+#include <zmk/keymap.h>
 #include "pmw3360.h"
 
 #include <zephyr/logging/log.h>
@@ -573,7 +574,7 @@ static int set_cpi_if_needed(const struct device *dev, uint32_t cpi) {
     return 0;
 }
 
-static int pmw3610_report_data(const struct device *dev) {
+static int pmw3360_report_data(const struct device *dev) {
     struct pixart_data *data = dev->data;
     uint8_t buf[PMW3360_BURST_SIZE];
 
@@ -732,41 +733,41 @@ static void pmw3360_work_callback(struct k_work *work) {
     set_interrupt(dev, true);
 }
 
-static void trigger_handler(struct k_work *work) {
-    sensor_trigger_handler_t handler;
-    int err = 0;
-    struct pixart_data *data = CONTAINER_OF(work, struct pixart_data, trigger_work);
-    const struct device *dev = data->dev;
-    const struct pixart_config *config = dev->config;
-
-    LOG_INF("In trigger handler");
-
-    // 1. the first lock period is used to procoss the trigger
-    // if data_ready_handler is non-NULL, otherwise do nothing
-    k_spinlock_key_t key = k_spin_lock(&data->lock);
-
-    handler = data->data_ready_handler;
-    k_spin_unlock(&data->lock, key);
-
-    if (!handler) {
-        return;
-    }
-
-    handler(dev, data->trigger);
-
-    // 2. the second lock period is used to resume the interrupt line
-    // if data_ready_handler is non-NULL, otherwise keep it inactive
-    key = k_spin_lock(&data->lock);
-    if (data->data_ready_handler) {
-        err = gpio_pin_interrupt_configure_dt(&config->irq_gpio, GPIO_INT_LEVEL_ACTIVE);
-    }
-    k_spin_unlock(&data->lock, key);
-
-    if (unlikely(err)) {
-        LOG_ERR("Cannot re-enable IRQ");
-        k_panic();
-    }
-}
+//static void trigger_handler(struct k_work *work) {
+//    sensor_trigger_handler_t handler;
+//    int err = 0;
+//    struct pixart_data *data = CONTAINER_OF(work, struct pixart_data, trigger_work);
+//    const struct device *dev = data->dev;
+//    const struct pixart_config *config = dev->config;
+//
+//    LOG_INF("In trigger handler");
+//
+//    // 1. the first lock period is used to procoss the trigger
+//    // if data_ready_handler is non-NULL, otherwise do nothing
+//    k_spinlock_key_t key = k_spin_lock(&data->lock);
+//
+//    handler = data->data_ready_handler;
+//    k_spin_unlock(&data->lock, key);
+//
+//    if (!handler) {
+//        return;
+//    }
+//
+//    handler(dev, data->trigger);
+//
+//    // 2. the second lock period is used to resume the interrupt line
+//    // if data_ready_handler is non-NULL, otherwise keep it inactive
+//    key = k_spin_lock(&data->lock);
+//    if (data->data_ready_handler) {
+//        err = gpio_pin_interrupt_configure_dt(&config->irq_gpio, GPIO_INT_LEVEL_ACTIVE);
+//    }
+//    k_spin_unlock(&data->lock, key);
+//
+//    if (unlikely(err)) {
+//        LOG_ERR("Cannot re-enable IRQ");
+//        k_panic();
+//    }
+//}
 
 static int pmw3360_async_init_power_up(const struct device *dev) {
     /* Reset sensor */
