@@ -608,13 +608,13 @@ static int pmw3610_report_data(const struct device *dev) {
 
     data->curr_mode = input_mode;
 
-#if AUTOMOUSE_LAYER > 0
-    if (input_mode == MOVE &&
-            (automouse_triggered || zmk_keymap_highest_layer_active() != AUTOMOUSE_LAYER)
-    ) {
-        activate_automouse_layer();
-    }
-#endif
+//#if AUTOMOUSE_LAYER > 0
+//    if (input_mode == MOVE &&
+//            (automouse_triggered || zmk_keymap_highest_layer_active() != AUTOMOUSE_LAYER)
+//    ) {
+//        activate_automouse_layer();
+//    }
+//#endif
 
     int err = motion_burst_read(dev, buf, sizeof(buf));
     if (err) {
