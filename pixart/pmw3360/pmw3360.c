@@ -43,7 +43,8 @@ static const int32_t async_init_delay[ASYNC_INIT_STEP_COUNT] = {
     [ASYNC_INIT_STEP_POWER_UP] = 1,
     [ASYNC_INIT_STEP_FW_LOAD_START] = 50,    // required in spec
     [ASYNC_INIT_STEP_FW_LOAD_CONTINUE] = 10, // required in spec
-    [ASYNC_INIT_STEP_FW_LOAD_VERIFY] = 1,    [ASYNC_INIT_STEP_CONFIGURE] = 0,
+    [ASYNC_INIT_STEP_FW_LOAD_VERIFY] = 1,
+    [ASYNC_INIT_STEP_CONFIGURE] = 0,
 };
 
 static int pmw3360_async_init_power_up(const struct device *dev);
