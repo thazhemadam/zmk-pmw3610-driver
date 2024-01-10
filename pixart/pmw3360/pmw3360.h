@@ -146,4 +146,4 @@ enum pmw3360_attribute {
  * @}
  */
 
-#endif /* ZEPHYR_INCLUDE_PMW3360_H_ */
+//#endif /* ZEPHYR_INCLUDE_PMW3360_H_ */
