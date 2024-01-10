@@ -868,7 +868,7 @@ static int pmw3360_init(const struct device *dev) {
     data->dev = dev;
 
     // init trigger handler work
-    k_work_init(&data->trigger_work, trigger_handler);
+    k_work_init(&data->trigger_work, pmw3360_work_callback);
 
     // check readiness of spi bus
 //    if (!device_is_ready(&config->cs_gpio.port)) {
@@ -982,48 +982,48 @@ static int pmw3360_channel_get(const struct device *dev, enum sensor_channel cha
 // 1. set up a handler callback
 // 2. set up a flag (i.e., data_ready_handler) to indicate resuming the interrput line or not
 //    This feature is useful to pass the resuming of the interrupt to application
-static int pmw3360_trigger_set(const struct device *dev, const struct sensor_trigger *trig,
-                               sensor_trigger_handler_t handler) {
-    LOG_INF("In trigger set");
-    struct pixart_data *data = dev->data;
-    const struct pixart_config *config = dev->config;
-    int err;
-
-    if (unlikely(trig->type != SENSOR_TRIG_DATA_READY)) {
-        return -ENOTSUP;
-    }
-
-    if (unlikely(trig->chan != SENSOR_CHAN_ALL)) {
-        return -ENOTSUP;
-    }
-
-    if (unlikely(!data->ready)) {
-        LOG_DBG("Device is not initialized yet");
-        return -EBUSY;
-    }
-
-    // spin lock is needed, so that the handler is not invoked before its pointer is assigned
-    // a valid value
-    k_spinlock_key_t key = k_spin_lock(&data->lock);
-
-    // if non-NULL (a real handler defined), eanble the interrupt line
-    // otherwise, disable the interrupt line
-    if (handler) {
-        err = gpio_pin_interrupt_configure_dt(&config->irq_gpio, GPIO_INT_LEVEL_ACTIVE);
-    } else {
-        err = gpio_pin_interrupt_configure_dt(&config->irq_gpio, GPIO_INT_DISABLE);
-    }
-
-    if (!err) {
-        data->data_ready_handler = handler;
-    }
-
-    data->trigger = trig;
-
-    k_spin_unlock(&data->lock, key);
-
-    return err;
-}
+//static int pmw3360_trigger_set(const struct device *dev, const struct sensor_trigger *trig,
+//                               sensor_trigger_handler_t handler) {
+//    LOG_INF("In trigger set");
+//    struct pixart_data *data = dev->data;
+//    const struct pixart_config *config = dev->config;
+//    int err;
+//
+//    if (unlikely(trig->type != SENSOR_TRIG_DATA_READY)) {
+//        return -ENOTSUP;
+//    }
+//
+//    if (unlikely(trig->chan != SENSOR_CHAN_ALL)) {
+//        return -ENOTSUP;
+//    }
+//
+//    if (unlikely(!data->ready)) {
+//        LOG_DBG("Device is not initialized yet");
+//        return -EBUSY;
+//    }
+//
+//    // spin lock is needed, so that the handler is not invoked before its pointer is assigned
+//    // a valid value
+//    k_spinlock_key_t key = k_spin_lock(&data->lock);
+//
+//    // if non-NULL (a real handler defined), eanble the interrupt line
+//    // otherwise, disable the interrupt line
+//    if (handler) {
+//        err = gpio_pin_interrupt_configure_dt(&config->irq_gpio, GPIO_INT_LEVEL_ACTIVE);
+//    } else {
+//        err = gpio_pin_interrupt_configure_dt(&config->irq_gpio, GPIO_INT_DISABLE);
+//    }
+//
+//    if (!err) {
+//        data->data_ready_handler = handler;
+//    }
+//
+//    data->trigger = trig;
+//
+//    k_spin_unlock(&data->lock, key);
+//
+//    return err;
+//}
 
 //static int pmw3360_attr_set(const struct device *dev, enum sensor_channel chan,
 //                            enum sensor_attribute attr, const struct sensor_value *val) {

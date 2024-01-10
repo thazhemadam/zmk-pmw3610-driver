@@ -13,6 +13,7 @@
  * @brief Header file for the pmw3360 driver.
  */
 
+#include <zephyr/drivers/sensor.h>
 #include "../pixart.h"
 
 #ifdef __cplusplus
