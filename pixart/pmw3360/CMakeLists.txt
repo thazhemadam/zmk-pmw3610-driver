@@ -5,3 +5,4 @@ zephyr_library()
 
 zephyr_library_sources(pmw3360.c)
 zephyr_library_sources(pmw3360_priv.c)
+zephyr_include_directories(${APPLICATION_SOURCE_DIR}/include)
