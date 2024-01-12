@@ -79,7 +79,7 @@ static int spi_cs_ctrl(const struct device *dev, bool enable) {
         k_busy_wait(T_NCS_SCLK);
     }
 
-    LOG_INF("finished spi_cs_ctrl");
+//    LOG_INF("finished spi_cs_ctrl");
     return err;
 }
 
@@ -173,7 +173,7 @@ static int reg_write(const struct device *dev, uint8_t reg, uint8_t val) {
 
 static int motion_burst_read(const struct device *dev, uint8_t *buf, size_t burst_size) {
 
-    LOG_INF("In burst read");
+//    LOG_INF("In burst read");
     int err;
     struct pixart_data *data = dev->data;
     const struct pixart_config *config = dev->config;
@@ -234,7 +234,7 @@ static int motion_burst_read(const struct device *dev, uint8_t *buf, size_t burs
 }
 
 static int burst_write(const struct device *dev, uint8_t reg, const uint8_t *buf, size_t size) {
-    LOG_INF("In burst write");
+//    LOG_INF("In burst write");
     int err;
     struct pixart_data *data = dev->data;
     const struct pixart_config *config = dev->config;
@@ -529,7 +529,7 @@ static void irq_handler(const struct device *gpiob, struct gpio_callback *cb, ui
     const struct device *dev = data->dev;
     const struct pixart_config *config = dev->config;
 
-    LOG_INF("In irq handler");
+//    LOG_INF("In irq handler");
     // disable the interrupt line first
     err = gpio_pin_interrupt_configure_dt(&config->irq_gpio, GPIO_INT_DISABLE);
     if (unlikely(err)) {
@@ -542,7 +542,7 @@ static void irq_handler(const struct device *gpiob, struct gpio_callback *cb, ui
 }
 
 static void set_interrupt(const struct device *dev, const bool en) {
-    LOG_INF("In pwm3360_set_interrupt");
+//    LOG_INF("In pwm3360_set_interrupt");
     const struct pixart_config *config = dev->config;
     int ret = gpio_pin_interrupt_configure_dt(&config->irq_gpio,
                                               en ? GPIO_INT_LEVEL_ACTIVE : GPIO_INT_DISABLE);
@@ -568,7 +568,7 @@ static enum pixart_input_mode get_input_mode_for_current_layer(const struct devi
 }
 
 static int set_cpi_if_needed(const struct device *dev, uint32_t cpi) {
-    LOG_INF("In pwm3360_set_cpi_if_needed");
+//    LOG_INF("In pwm3360_set_cpi_if_needed");
     struct pixart_data *data = dev->data;
     if (cpi != data->curr_cpi) {
         return set_cpi(dev, cpi);
@@ -577,7 +577,7 @@ static int set_cpi_if_needed(const struct device *dev, uint32_t cpi) {
 }
 
 static int pmw3360_report_data(const struct device *dev) {
-    LOG_INF("In pwm3360_report_data");
+//    LOG_INF("In pwm3360_report_data");
     struct pixart_data *data = dev->data;
     uint8_t buf[PMW3360_BURST_SIZE];
 
@@ -718,7 +718,7 @@ static int pmw3360_report_data(const struct device *dev) {
 
 static void pmw3360_gpio_callback(const struct device *gpiob, struct gpio_callback *cb,
                                   uint32_t pins) {
-    LOG_INF("In pwm3360_gpio_callback");
+//    LOG_INF("In pwm3360_gpio_callback");
     struct pixart_data *data = CONTAINER_OF(cb, struct pixart_data, irq_gpio_cb);
     const struct device *dev = data->dev;
 
@@ -729,7 +729,7 @@ static void pmw3360_gpio_callback(const struct device *gpiob, struct gpio_callba
 }
 
 static void pmw3360_work_callback(struct k_work *work) {
-    LOG_INF("In pwm3360_work_callback");
+//    LOG_INF("In pwm3360_work_callback");
     struct pixart_data *data = CONTAINER_OF(work, struct pixart_data, trigger_work);
     const struct device *dev = data->dev;
 
