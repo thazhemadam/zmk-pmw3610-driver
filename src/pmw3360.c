@@ -1111,6 +1111,6 @@ static int pmw3360_init(const struct device *dev) {
     };                                                                                             \
                                                                                                    \
     DEVICE_DT_INST_DEFINE(n, pmw3360_init, NULL, &data##n, &config##n, POST_KERNEL,                \
-                          CONFIG_SENSOR_INIT_PRIORITY, NULL);
+                          CONFIG_INPUT_INIT_PRIORITY, NULL);
 
 DT_INST_FOREACH_STATUS_OKAY(PMW3360_DEFINE)
